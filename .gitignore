@@ -1,0 +1,50 @@
+# =========================================================
+# AI Football Intelligence System — .gitignore
+# =========================================================
+
+# Environment & secrets
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+*.whl
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# ML data (large files)
+backend/ml/data/*.csv
+backend/ml/data/*.json
+backend/ml/data/*.pkl
+backend/ml/models/*.pkl
+backend/ml/models/*.joblib

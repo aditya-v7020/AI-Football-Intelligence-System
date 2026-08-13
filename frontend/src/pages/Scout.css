@@ -1,0 +1,133 @@
+.scout-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.scout-input-section {
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.scout-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.scout-textarea {
+  min-height: 120px;
+  margin-bottom: 12px;
+}
+
+.scout-input-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scout-char-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.scout-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.scout-examples-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Report */
+.scout-report {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scout-report-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.scout-report-header:hover {
+  transform: none;
+}
+
+.scout-report-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.scout-report-req {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.scout-report-body {
+  padding: 24px;
+  line-height: 1.7;
+  font-size: 0.9375rem;
+}
+
+.scout-report-body:hover {
+  transform: none;
+}
+
+.scout-report-body h2, .scout-report-body h3 {
+  font-family: var(--font-heading);
+  margin: 16px 0 8px;
+}
+
+.scout-report-body ul, .scout-report-body ol {
+  padding-left: 20px;
+}
+
+.scout-report-body strong {
+  color: var(--accent-green);
+}
+
+/* Raw data */
+.scout-raw-data {
+  padding: 16px 20px;
+}
+
+.scout-raw-data:hover {
+  transform: none;
+}
+
+.scout-raw-summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.scout-raw-content {
+  margin-top: 12px;
+  padding: 16px;
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  max-height: 400px;
+  overflow-y: auto;
+}

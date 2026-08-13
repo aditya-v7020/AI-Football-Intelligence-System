@@ -1,0 +1,141 @@
+.settings-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.settings-section {
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.settings-section:hover {
+  transform: none;
+}
+
+.settings-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.settings-section-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.settings-section-header .settings-section-title {
+  margin-bottom: 0;
+}
+
+/* Status */
+.settings-status-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settings-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+}
+
+.settings-status-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* History */
+.settings-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.settings-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+}
+
+.settings-history-query {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.settings-history-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.settings-empty {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* About */
+.about-content {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.about-content h3 {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 20px 0 10px;
+}
+
+.about-content strong {
+  color: var(--accent-green);
+}
+
+.about-content ol {
+  padding-left: 20px;
+}
+
+.about-content li {
+  margin: 6px 0;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.tech-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.tech-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tech-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
