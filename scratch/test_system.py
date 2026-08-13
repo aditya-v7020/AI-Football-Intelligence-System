@@ -169,10 +169,56 @@ def test_fastapi_server_routes():
     print("\nFastAPI Server route verification PASSED cleanly!\n")
 
 
+def test_cors_middleware():
+    print("========================================")
+    print("3. Testing FastAPI CORS Middleware & Preflight")
+    print("========================================")
+
+    from backend.server import app
+    from fastapi.testclient import TestClient
+
+    client = TestClient(app)
+    test_origins = [
+        "https://ai-football-intelligence-system.vercel.app",
+        "https://ai-football-intelligence-system-r6quhakdn-aditya-9837.vercel.app",
+        "https://ai-football-intelligence-system-ckqp4bycy-aditya-9837.vercel.app",
+        "http://localhost:5173",
+    ]
+
+    for origin in test_origins:
+        # Test OPTIONS preflight
+        opt_res = client.options(
+            "/api/health",
+            headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": "GET",
+            },
+        )
+        print(f"OPTIONS /api/health from [{origin}] Status: {opt_res.status_code}")
+        print(f"  Access-Control-Allow-Origin: {opt_res.headers.get('access-control-allow-origin')}")
+        assert opt_res.status_code == 200, f"OPTIONS preflight failed for {origin}"
+        assert opt_res.headers.get("access-control-allow-origin") == origin, f"CORS origin mismatch on OPTIONS for {origin}"
+
+        # Test GET request
+        get_res = client.get(
+            "/api/health",
+            headers={"Origin": origin},
+        )
+        print(f"GET /api/health from [{origin}] Status: {get_res.status_code}")
+        print(f"  Access-Control-Allow-Origin: {get_res.headers.get('access-control-allow-origin')}")
+        assert get_res.status_code == 200, f"GET health failed for {origin}"
+        assert get_res.headers.get("access-control-allow-origin") == origin, f"CORS origin mismatch on GET for {origin}"
+
+    print("\nFastAPI CORS Middleware verification PASSED cleanly for main domain, preview domain & localhost!\n")
+
+
+
 if __name__ == "__main__":
     test_ml_pipeline()
     test_fastapi_server_routes()
+    test_cors_middleware()
     print("ALL TESTS PASSED SUCCESSFULLY!")
+
 
 
 

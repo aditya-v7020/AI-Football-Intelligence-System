@@ -50,14 +50,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — allows the Vite frontend to communicate
+# CORS — allows the Vite frontend and Vercel deployments to communicate
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Mount routers
 app.include_router(chat_router)

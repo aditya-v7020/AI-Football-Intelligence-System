@@ -3,9 +3,38 @@
  * Uses environment variable configuration for base URL.
  */
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+const normalizeBaseUrl = (rawUrl) => {
+  const isProd = import.meta.env.PROD || import.meta.env.MODE === 'production';
+  
+  if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) {
+    if (isProd) {
+      throw new Error(
+        'VITE_API_BASE_URL environment variable is missing in production build. Please set VITE_API_BASE_URL in Vercel settings.'
+      );
+    }
+    return 'http://localhost:8000';
+  }
+
+  const cleaned = rawUrl.trim().replace(/['"]/g, '').replace(/\/+$/, '');
+  if (cleaned.includes('example.com') || cleaned.includes('api.yourdomain.com')) {
+    if (isProd) {
+      throw new Error(
+        `Invalid VITE_API_BASE_URL "${cleaned}" configured in production build.`
+      );
+    }
+    return 'http://localhost:8000';
+  }
+
+  return cleaned;
+};
+
+const API_BASE = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL);
 
 class ApiClient {
+  getBaseUrl() {
+    return API_BASE;
+  }
+
   /**
    * Make a fetch request with standard error handling.
    */
@@ -15,8 +44,10 @@ class ApiClient {
       ...options,
     };
 
+    const endpointUrl = `${API_BASE}${url.startsWith('/') ? url : `/${url}`}`;
+
     try {
-      const response = await fetch(`${API_BASE}${url}`, config);
+      const response = await fetch(endpointUrl, config);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -35,6 +66,7 @@ class ApiClient {
       throw error;
     }
   }
+
 
   // --- Chat ---
   async sendChat(query, threadId = null) {

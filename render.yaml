@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ai-football-intelligence-system
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: CORS_ORIGINS
+        value: https://ai-football-intelligence-system.vercel.app,http://localhost:5173,http://127.0.0.1:5173
+      - key: FOOTBALL_SEASON
+        value: "2024"
+      - key: LLM_MODEL
+        value: llama-3.3-70b-versatile

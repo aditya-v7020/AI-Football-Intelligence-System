@@ -4,12 +4,22 @@ import './Settings.css';
 
 export default function Settings() {
   const [health, setHealth] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [recentSearches, setRecentSearches] = useState([]);
 
   useEffect(() => {
+    setLoading(true);
     api.healthCheck()
-      .then(setHealth)
-      .catch(() => setHealth({ status: 'error' }));
+      .then((data) => {
+        setHealth(data);
+        setError(null);
+      })
+      .catch((err) => {
+        setHealth(null);
+        setError(err.message || 'Unable to connect to backend server');
+      })
+      .finally(() => setLoading(false));
 
     const saved = localStorage.getItem('recentSearches');
     if (saved) {
@@ -33,39 +43,48 @@ export default function Settings() {
       {/* System status */}
       <section className="settings-section glass-card">
         <h2 className="settings-section-title">System Status</h2>
+        <div style={{ marginBottom: '12px', fontSize: '0.85rem', color: '#94a3b8' }}>
+          Backend Target: <code>{api.getBaseUrl()}</code>
+        </div>
+        {error && (
+          <div className="search-error" style={{ marginBottom: '16px' }}>
+            ⚠️ Backend Connection Error: {error}
+          </div>
+        )}
         <div className="settings-status-grid">
           <div className="settings-status-row">
             <span className="settings-status-label">Overall Status</span>
-            <span className={`badge ${health?.status === 'healthy' ? 'badge-green' : 'badge-red'}`}>
-              {health?.status || 'Checking...'}
+            <span className={`badge ${loading ? '' : (health?.status === 'healthy' ? 'badge-green' : 'badge-red')}`}>
+              {loading ? 'Checking...' : (health?.status || 'Disconnected')}
             </span>
           </div>
           <div className="settings-status-row">
             <span className="settings-status-label">PostgreSQL Database</span>
-            <span className={`badge ${health?.database === 'connected' ? 'badge-green' : 'badge-red'}`}>
-              {health?.database || 'Checking...'}
+            <span className={`badge ${loading ? '' : (health?.database === 'connected' ? 'badge-green' : 'badge-red')}`}>
+              {loading ? 'Checking...' : (health?.database || 'Disconnected')}
             </span>
           </div>
           <div className="settings-status-row">
             <span className="settings-status-label">Groq LLM (Llama 3.3 70B)</span>
-            <span className={`badge ${health?.groq_configured ? 'badge-green' : 'badge-red'}`}>
-              {health?.groq_configured ? 'Configured' : 'Not configured'}
+            <span className={`badge ${loading ? '' : (health?.groq_configured ? 'badge-green' : 'badge-red')}`}>
+              {loading ? 'Checking...' : (health?.groq_configured ? 'Configured' : 'Not configured')}
             </span>
           </div>
           <div className="settings-status-row">
             <span className="settings-status-label">API-Football</span>
-            <span className={`badge ${health?.football_api_configured ? 'badge-green' : 'badge-red'}`}>
-              {health?.football_api_configured ? `Season ${health.football_season}` : 'Not configured'}
+            <span className={`badge ${loading ? '' : (health?.football_api_configured ? 'badge-green' : 'badge-red')}`}>
+              {loading ? 'Checking...' : (health?.football_api_configured ? `Season ${health.football_season}` : 'Not configured')}
             </span>
           </div>
           <div className="settings-status-row">
             <span className="settings-status-label">Tavily Web Search</span>
-            <span className={`badge ${health?.tavily_configured ? 'badge-green' : 'badge-red'}`}>
-              {health?.tavily_configured ? 'Configured' : 'Not configured'}
+            <span className={`badge ${loading ? '' : (health?.tavily_configured ? 'badge-green' : 'badge-red')}`}>
+              {loading ? 'Checking...' : (health?.tavily_configured ? 'Configured' : 'Not configured')}
             </span>
           </div>
         </div>
       </section>
+
 
       {/* Chat history */}
       <section className="settings-section glass-card">

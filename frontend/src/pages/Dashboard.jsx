@@ -22,18 +22,40 @@ const exampleQueries = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const [health, setHealth] = useState(null);
+  const [loadingHealth, setLoadingHealth] = useState(true);
+  const [healthError, setHealthError] = useState(null);
   const [recentSearches, setRecentSearches] = useState([]);
 
   useEffect(() => {
+    setLoadingHealth(true);
     api.healthCheck()
-      .then(setHealth)
-      .catch(() => setHealth({ status: 'error' }));
+      .then((data) => {
+        setHealth(data);
+        setHealthError(null);
+      })
+      .catch((err) => {
+        setHealth(null);
+        setHealthError(err.message || 'Unable to connect to backend server');
+      })
+      .finally(() => setLoadingHealth(false));
 
     const saved = localStorage.getItem('recentSearches');
     if (saved) {
       try { setRecentSearches(JSON.parse(saved)); } catch {}
     }
   }, []);
+
+  const getStatusText = (isConfigured, defaultText = 'Connected') => {
+    if (loadingHealth) return 'Checking...';
+    if (healthError || !health) return 'Connection Error';
+    return isConfigured ? defaultText : 'Not configured';
+  };
+
+  const getStatusColor = (isConfigured) => {
+    if (loadingHealth) return '';
+    if (healthError || !health) return 'text-red';
+    return isConfigured ? 'text-green' : 'text-red';
+  };
 
   return (
     <div className="dashboard animate-fade-in">
@@ -64,6 +86,12 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {healthError && (
+        <div className="search-error" style={{ marginBottom: '24px' }}>
+          ⚠️ Backend Connection Warning: {healthError} (Target: {api.getBaseUrl()})
+        </div>
+      )}
+
       {/* Status cards for all integrations */}
       <h2 className="section-title">Data Sources & System Health</h2>
       <div className="dashboard-status-grid stagger-children" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
@@ -71,8 +99,8 @@ export default function Dashboard() {
           <div className="status-card-icon">🗄️</div>
           <div className="status-card-info">
             <span className="status-card-label">Database</span>
-            <span className={`status-card-value ${health?.database === 'connected' ? 'text-green' : 'text-red'}`}>
-              {health?.database || 'Checking...'}
+            <span className={`status-card-value ${getStatusColor(health?.database === 'connected')}`}>
+              {loadingHealth ? 'Checking...' : (health ? (health.database === 'connected' ? 'Connected' : 'Disconnected') : 'Connection Error')}
             </span>
           </div>
         </div>
@@ -80,8 +108,8 @@ export default function Dashboard() {
           <div className="status-card-icon">🧠</div>
           <div className="status-card-info">
             <span className="status-card-label">Groq LLM</span>
-            <span className={`status-card-value ${health?.groq_configured ? 'text-green' : 'text-red'}`}>
-              {health?.groq_configured ? 'Connected' : 'Not configured'}
+            <span className={`status-card-value ${getStatusColor(health?.groq_configured)}`}>
+              {getStatusText(health?.groq_configured)}
             </span>
           </div>
         </div>
@@ -89,8 +117,8 @@ export default function Dashboard() {
           <div className="status-card-icon">⚽</div>
           <div className="status-card-info">
             <span className="status-card-label">API-Football</span>
-            <span className={`status-card-value ${health?.football_api_configured ? 'text-green' : 'text-red'}`}>
-              {health ? (health.football_api_configured ? `Season ${health.football_season}` : 'Not configured') : 'Checking...'}
+            <span className={`status-card-value ${getStatusColor(health?.football_api_configured)}`}>
+              {getStatusText(health?.football_api_configured, health?.football_season ? `Season ${health.football_season}` : 'Connected')}
             </span>
           </div>
         </div>
@@ -98,8 +126,8 @@ export default function Dashboard() {
           <div className="status-card-icon">👑</div>
           <div className="status-card-info">
             <span className="status-card-label">Sportmonks</span>
-            <span className={`status-card-value ${health?.sportmonks_configured ? 'text-green' : 'text-red'}`}>
-              {health?.sportmonks_configured ? 'Connected' : 'Not configured'}
+            <span className={`status-card-value ${getStatusColor(health?.sportmonks_configured)}`}>
+              {getStatusText(health?.sportmonks_configured)}
             </span>
           </div>
         </div>
@@ -107,8 +135,8 @@ export default function Dashboard() {
           <div className="status-card-icon">🖼️</div>
           <div className="status-card-info">
             <span className="status-card-label">TheSportsDB</span>
-            <span className={`status-card-value ${health?.thesportsdb_configured ? 'text-green' : 'text-red'}`}>
-              {health?.thesportsdb_configured ? 'Connected' : 'Not configured'}
+            <span className={`status-card-value ${getStatusColor(health?.thesportsdb_configured)}`}>
+              {getStatusText(health?.thesportsdb_configured)}
             </span>
           </div>
         </div>
@@ -116,8 +144,8 @@ export default function Dashboard() {
           <div className="status-card-icon">📊</div>
           <div className="status-card-info">
             <span className="status-card-label">Football-Data</span>
-            <span className={`status-card-value ${health?.football_data_configured ? 'text-green' : 'text-red'}`}>
-              {health?.football_data_configured ? 'Connected' : 'Not configured'}
+            <span className={`status-card-value ${getStatusColor(health?.football_data_configured)}`}>
+              {getStatusText(health?.football_data_configured)}
             </span>
           </div>
         </div>
@@ -125,12 +153,13 @@ export default function Dashboard() {
           <div className="status-card-icon">🔎</div>
           <div className="status-card-info">
             <span className="status-card-label">Tavily Search</span>
-            <span className={`status-card-value ${health?.tavily_configured ? 'text-green' : 'text-red'}`}>
-              {health?.tavily_configured ? 'Connected' : 'Not configured'}
+            <span className={`status-card-value ${getStatusColor(health?.tavily_configured)}`}>
+              {getStatusText(health?.tavily_configured)}
             </span>
           </div>
         </div>
       </div>
+
 
       {/* Quick actions */}
       <section className="dashboard-section">

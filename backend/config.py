@@ -8,6 +8,14 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
+DEFAULT_CORS_ORIGINS = [
+    "https://ai-football-intelligence-system.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:4173",
+    "http://localhost:3000",
+]
+
 
 class Settings:
     """Application settings loaded from environment variables."""
@@ -39,15 +47,16 @@ class Settings:
     BACKEND_HOST: str = os.getenv("BACKEND_HOST", "127.0.0.1")
     BACKEND_PORT: int = int(os.getenv("BACKEND_PORT", "8000"))
 
-    # CORS origins (comma-separated)
-    CORS_ORIGINS: list[str] = [
-        origin.strip().rstrip("/")
-        for origin in os.getenv(
-            "CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173"
-        ).split(",")
-        if origin.strip()
-    ]
-
+    # Production and local development CORS origins
+    CORS_ORIGINS: list[str] = list(
+        dict.fromkeys(
+            DEFAULT_CORS_ORIGINS + [
+                item.strip().rstrip("/")
+                for item in os.getenv("CORS_ORIGINS", "").split(",")
+                if item.strip()
+            ]
+        )
+    )
 
     @classmethod
     def validate(cls) -> list[str]:
