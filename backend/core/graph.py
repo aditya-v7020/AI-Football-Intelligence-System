@@ -25,6 +25,13 @@ from backend.core.agents import (
 _db_connection = None
 _checkpointer = None
 _compiled_app = None
+_db_error = None
+
+
+def get_db_error() -> str:
+    """Return the last database connection error message if any."""
+    global _db_error
+    return _db_error or ""
 
 
 def get_db_url() -> str:
@@ -37,11 +44,12 @@ def get_db_url() -> str:
 
 def connect_db() -> bool:
     """Establish or re-establish PostgreSQL connection and PostgresSaver checkpointer."""
-    global _db_connection, _checkpointer
+    global _db_connection, _checkpointer, _db_error
     url = get_db_url()
     if not url:
         _db_connection = None
         _checkpointer = MemorySaver()
+        _db_error = "DATABASE_URL environment variable is not configured"
         return False
 
     if _db_connection is not None:
@@ -68,6 +76,7 @@ def connect_db() -> bool:
             _checkpointer = PostgresSaver(_db_connection)
             _checkpointer.setup()
             print("LangGraph PostgreSQL memory ready.\n")
+            _db_error = None
             return True
 
         except Exception as error:
@@ -75,7 +84,8 @@ def connect_db() -> bool:
             _db_connection = None
             continue
 
-    print(f"\nPostgreSQL connection failed: {last_error}")
+    _db_error = str(last_error) if last_error else "Unknown connection failure"
+    print(f"\nPostgreSQL connection failed: {_db_error}")
     print("Falling back to MemorySaver in-memory checkpointing.")
     _checkpointer = MemorySaver()
     return False

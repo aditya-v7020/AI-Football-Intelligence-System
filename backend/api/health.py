@@ -4,7 +4,7 @@ Health check & diagnostic API endpoints.
 
 from fastapi import APIRouter
 from backend.models.schemas import HealthResponse
-from backend.core.graph import check_db_health
+from backend.core.graph import check_db_health, get_db_error
 from backend.config import settings
 
 router = APIRouter(prefix="/api", tags=["Health"])
@@ -41,6 +41,7 @@ async def system_status():
     return {
         "backend": "ok",
         "database": "connected" if db_ok else ("memory_fallback" if not settings.DATABASE_URL else "disconnected"),
+        "db_error": get_db_error(),
         "groq": "configured" if bool(settings.GROQ_API_KEY) else "not_configured",
         "api_football": "configured" if bool(settings.FOOTBALL_API_KEY) else "not_configured",
         "sportmonks": "configured" if bool(settings.SPORTMONKS_API_KEY) else "not_configured",
