@@ -44,35 +44,41 @@ def connect_db() -> bool:
         _checkpointer = MemorySaver()
         return False
 
-    try:
-        if _db_connection is not None:
-            try:
-                _db_connection.close()
-            except Exception:
-                pass
-            _db_connection = None
-
-        print("\nConnecting to PostgreSQL...")
-        _db_connection = psycopg.connect(
-            url,
-            autocommit=True,
-            prepare_threshold=0,
-            connect_timeout=10,
-            sslmode="prefer",
-        )
-        print("PostgreSQL connected successfully.")
-
-        _checkpointer = PostgresSaver(_db_connection)
-        _checkpointer.setup()
-        print("LangGraph PostgreSQL memory ready.\n")
-        return True
-
-    except Exception as error:
-        print(f"\nPostgreSQL connection failed: {error}")
-        print("Falling back to MemorySaver in-memory checkpointing.")
+    if _db_connection is not None:
+        try:
+            _db_connection.close()
+        except Exception:
+            pass
         _db_connection = None
-        _checkpointer = MemorySaver()
-        return False
+
+    is_local = "localhost" in url or "127.0.0.1" in url
+    ssl_options = ["disable", "prefer"] if is_local else ["require", "prefer", "disable"]
+
+    last_error = None
+    for sslmode in ssl_options:
+        try:
+            print(f"\nConnecting to PostgreSQL (sslmode={sslmode})...")
+            kwargs = {"autocommit": True, "prepare_threshold": 0, "connect_timeout": 10}
+            if "sslmode=" not in url:
+                kwargs["sslmode"] = sslmode
+
+            _db_connection = psycopg.connect(url, **kwargs)
+            print(f"PostgreSQL connected successfully (sslmode={sslmode}).")
+
+            _checkpointer = PostgresSaver(_db_connection)
+            _checkpointer.setup()
+            print("LangGraph PostgreSQL memory ready.\n")
+            return True
+
+        except Exception as error:
+            last_error = error
+            _db_connection = None
+            continue
+
+    print(f"\nPostgreSQL connection failed: {last_error}")
+    print("Falling back to MemorySaver in-memory checkpointing.")
+    _checkpointer = MemorySaver()
+    return False
 
 
 def build_graph():
