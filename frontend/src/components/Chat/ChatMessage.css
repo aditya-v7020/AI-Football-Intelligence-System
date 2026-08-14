@@ -54,6 +54,8 @@
   color: var(--text-primary);
   font-size: 0.9375rem;
   line-height: 1.7;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .chat-message-body h1,
@@ -61,6 +63,7 @@
 .chat-message-body h3 {
   font-family: var(--font-heading);
   margin: 16px 0 8px;
+  word-break: break-word;
 }
 
 .chat-message-body h2 { font-size: 1.1rem; }
@@ -84,6 +87,8 @@
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.85em;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .chat-message-body p {
@@ -108,12 +113,16 @@
 
 .chat-source-link {
   font-size: 0.75rem;
-  padding: 2px 8px;
+  padding: 4px 10px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
   background: rgba(171, 71, 188, 0.1);
   border: 1px solid rgba(171, 71, 188, 0.2);
   border-radius: var(--radius-sm);
   color: var(--accent-purple);
   transition: all var(--transition-fast);
+  word-break: break-all;
 }
 
 .chat-source-link:hover {
@@ -122,6 +131,14 @@
 
 @media (max-width: 768px) {
   .chat-message {
-    max-width: 95%;
+    max-width: 96%;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .chat-message-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
   }
 }

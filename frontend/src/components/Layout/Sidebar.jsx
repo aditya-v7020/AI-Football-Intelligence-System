@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
@@ -13,25 +13,59 @@ const navItems = [
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+
+  // Auto-close mobile sidebar when navigating to a new route
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
-      {/* Mobile overlay */}
-      <div
-        className={`sidebar-overlay ${collapsed ? '' : 'hidden'}`}
-        onClick={() => setCollapsed(false)}
-      />
+      {/* Mobile Header Bar — visible only on screens <= 768px */}
+      <header className="mobile-header">
+        <div className="mobile-header-brand">
+          <span className="mobile-header-logo">⚽</span>
+          <span className="mobile-header-title gradient-text">Football AI</span>
+        </div>
+        <button
+          className="mobile-menu-toggle"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
+        >
+          {mobileOpen ? '✕' : '☰'}
+        </button>
+      </header>
 
-      <aside className={`sidebar ${collapsed ? 'sidebar-collapsed' : ''}`}>
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside className={`sidebar ${collapsed ? 'sidebar-collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
         {/* Brand */}
         <div className="sidebar-brand">
           <div className="sidebar-logo">⚽</div>
-          {!collapsed && (
+          {(!collapsed || mobileOpen) && (
             <div className="sidebar-brand-text">
               <span className="sidebar-title gradient-text">Football AI</span>
               <span className="sidebar-subtitle">Intelligence System</span>
             </div>
+          )}
+          {mobileOpen && (
+            <button
+              className="mobile-sidebar-close"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+            >
+              ✕
+            </button>
           )}
         </div>
 
@@ -45,19 +79,20 @@ export default function Sidebar() {
                 `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`
               }
               title={item.label}
+              onClick={() => setMobileOpen(false)}
             >
               <span className="sidebar-link-icon">{item.icon}</span>
-              {!collapsed && (
+              {(!collapsed || mobileOpen) && (
                 <span className="sidebar-link-label">{item.label}</span>
               )}
-              {!collapsed && location.pathname === item.path && (
+              {(!collapsed || mobileOpen) && location.pathname === item.path && (
                 <span className="sidebar-link-indicator" />
               )}
             </NavLink>
           ))}
         </nav>
 
-        {/* Collapse toggle */}
+        {/* Collapse toggle (desktop only) */}
         <button
           className="sidebar-toggle"
           onClick={() => setCollapsed(!collapsed)}
@@ -67,7 +102,7 @@ export default function Sidebar() {
         </button>
 
         {/* Footer */}
-        {!collapsed && (
+        {(!collapsed || mobileOpen) && (
           <div className="sidebar-footer">
             <div className="sidebar-footer-badge badge-green">
               Multi-Agent AI

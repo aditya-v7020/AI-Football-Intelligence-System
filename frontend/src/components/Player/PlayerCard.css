@@ -137,3 +137,29 @@
   color: var(--text-muted);
   text-transform: uppercase;
 }
+
+@media (max-width: 480px) {
+  .player-card-header {
+    padding: 16px 14px 12px;
+  }
+
+  .player-card-body {
+    padding: 14px;
+  }
+
+  .player-card-photo-wrap {
+    width: 64px;
+    height: 64px;
+  }
+
+  .player-card-name {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .player-card-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+}

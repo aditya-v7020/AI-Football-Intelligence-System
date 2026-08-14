@@ -132,6 +132,7 @@
 
 .chat-send-btn {
   width: 48px;
+  min-height: 44px;
   padding: 0;
   font-size: 1.25rem;
   flex-shrink: 0;
@@ -146,6 +147,50 @@
 
 @media (max-width: 768px) {
   .chat-page {
-    height: calc(100vh - 32px);
+    height: calc(100vh - 100px);
+    height: calc(100dvh - 100px);
+  }
+
+  .chat-title {
+    font-size: 1.35rem;
+  }
+
+  .chat-welcome {
+    padding: 24px 12px;
+  }
+
+  .chat-welcome-icon {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+  }
+
+  .chat-suggestions {
+    gap: 6px;
+  }
+
+  .chat-suggestion-chip {
+    padding: 10px 14px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8125rem;
+  }
+
+  .chat-input-wrapper {
+    gap: 6px;
+  }
+
+  .chat-input {
+    font-size: 16px !important;
+    padding: 10px 14px;
+  }
+
+  .chat-send-btn {
+    width: 44px;
+    min-height: 44px;
+  }
+
+  .chat-input-hint {
+    display: none;
   }
 }

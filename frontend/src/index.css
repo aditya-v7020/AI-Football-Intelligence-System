@@ -136,10 +136,16 @@ a:hover {
   transition: all var(--transition-normal);
 }
 
-.glass-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .glass-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+}
+
+.glass-card:active {
+  opacity: 0.96;
 }
 
 .gradient-text {
@@ -392,9 +398,35 @@ a:hover {
   border: 1px solid rgba(0, 230, 118, 0.2);
 }
 
+/* ----- Touch & Mobile Controls ----- */
+button, input, select, textarea, a, .glass-card, .example-query-chip, .chat-suggestion-chip {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ----- Responsive ----- */
 @media (max-width: 768px) {
   :root {
     --sidebar-width: 0px;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .input, .textarea {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+
+  .btn-sm {
+    min-height: 38px;
+    padding: 8px 14px;
+    font-size: 0.875rem;
   }
 }

@@ -178,3 +178,48 @@
   font-size: 0.875rem;
   color: var(--text-muted);
 }
+
+@media (max-width: 768px) {
+  .player-detail-panel {
+    padding: 18px 16px;
+  }
+
+  .detail-stats-grid {
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-bar-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search-bar-container .btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .player-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .detail-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detail-stat-item {
+    padding: 10px 8px;
+  }
+
+  .detail-stat-value {
+    font-size: 1rem;
+  }
+
+  .detail-panel-header .btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

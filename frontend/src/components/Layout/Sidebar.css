@@ -152,22 +152,108 @@
   color: var(--text-muted);
 }
 
+.mobile-header {
+  display: none;
+}
+
+.mobile-sidebar-close {
+  display: none;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    height: 56px;
+  }
+
+  .mobile-header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-header-logo {
+    font-size: 1.35rem;
+  }
+
+  .mobile-header-title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .mobile-menu-toggle {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .mobile-menu-toggle:active {
+    background: var(--bg-card-hover);
+  }
+
+  .mobile-sidebar-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
   .sidebar {
     transform: translateX(-100%);
-    width: 260px;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--transition-normal);
   }
 
-  .sidebar:not(.sidebar-collapsed) {
-    transform: translateX(0);
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
   }
 
-  .sidebar-overlay:not(.hidden) {
+  .sidebar-overlay {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 99;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+
+  .sidebar-link {
+    padding: 14px 16px;
+    min-height: 48px;
+    font-size: 0.95rem;
+  }
+
+  .sidebar-toggle {
+    display: none;
   }
 }

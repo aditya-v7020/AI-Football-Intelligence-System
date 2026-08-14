@@ -9,11 +9,18 @@
   padding: 24px 32px;
   min-height: 100vh;
   transition: margin-left var(--transition-normal);
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
   .app-main {
     margin-left: 0;
-    padding: 16px;
+    padding: 16px 14px 32px 14px;
+    min-height: calc(100vh - 56px);
+    width: 100%;
   }
 }
